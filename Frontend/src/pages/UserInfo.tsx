@@ -38,7 +38,10 @@ const UserInfo = () => {
           }}
           alt="Gray Bakari"
         >
-          {"GM"}
+          {user?.username
+            .split(" ")
+            .map((word) => word[0])
+            .join("")}
         </Avatar>
         <div className="flex flex-col gap-5 text-lg">
           <h1 className="flex gap-10">

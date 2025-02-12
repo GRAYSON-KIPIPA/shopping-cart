@@ -12,8 +12,10 @@ const ViewProduct = () => {
   const token = localStorage.getItem("authToken");
   const [refreshReviews, setRefreshReviews] = useState(false);
 
+  console.log("IDD: ", id);
   const getProduct = async () => {
     const response = await api.get(`/products/${id}`);
+    console.log("PRODUCTS", response.data);
     setProduct(response.data);
   };
   useEffect(() => {
@@ -28,7 +30,7 @@ const ViewProduct = () => {
             PRODUCT DETAILS
           </h1>
           <div
-            style={{ width: 600, height: 300 }}
+            style={{ width: 600, minHeight: 300 }}
             className="border rounded-md mt-10"
           >
             <div className="flex flex-col gap-20 ml-10">
@@ -50,10 +52,10 @@ const ViewProduct = () => {
           </div>
         </div>
         <div>
-          <ReviewList productId={id} key={refreshReviews.toString()} />
+          <ReviewList productId={id ?? ""} key={refreshReviews.toString()} />
           {token && (
             <AddReview
-              productId={id}
+              productId={id ?? ""}
               token={token}
               onReviewAdded={() => setRefreshReviews(!refreshReviews)}
             />

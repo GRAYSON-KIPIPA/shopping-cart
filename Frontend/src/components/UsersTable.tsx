@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,20 +7,29 @@ import TableRow from "@mui/material/TableRow";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import { ResponseUser } from "../modals/Modals";
-import api from "../api";
 import { useNavigate } from "react-router-dom";
 import useAxiosWithAuth from "../api";
 
-interface UsersTableProps {
-  users: ResponseUser[];
-  onDeleteProduct: (id: string) => void;
-}
-
-const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteProduct }) => {
+const UsersTable = () => {
   const api = useAxiosWithAuth();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
+
+  const [users, setUsers] = useState<ResponseUser[] | undefined>();
+
+  const getUsers = async () => {
+    try {
+      const response = await api.get("/admin/users");
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -39,17 +48,9 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteProduct }) => {
     page * rowsPerPage + rowsPerPage,
   );
 
-  //   const deleteProduct = async (id: string) => {
-  //     try {
-  //       await api.delete(`/products/${id}`);
-  //       onDeleteProduct(id);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
   const handleDeleteUser = async (id: string) => {
     await api.delete(`/admin/users/${id}`);
+    getUsers();
   };
 
   const handleViewUser = (id: string) => {
@@ -81,7 +82,6 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteProduct }) => {
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Role</TableCell>
               <TableCell align="center">View</TableCell>
-              <TableCell align="center">Edit</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
@@ -107,11 +107,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteProduct }) => {
                     View
                   </button>
                 </TableCell>
-                <TableCell align="center">
-                  <button className="bg-lime-900 text-cyan-200 p-1 rounded-sm">
-                    Edit
-                  </button>
-                </TableCell>
+
                 <TableCell align="center">
                   <button
                     onClick={() => handleDeleteUser(row?._id)}
@@ -129,7 +125,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteProduct }) => {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={users?.length}
+                  count={users?.length || 0}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}

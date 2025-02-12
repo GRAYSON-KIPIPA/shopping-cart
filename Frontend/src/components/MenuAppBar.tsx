@@ -1,27 +1,38 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserFromToken } from "../utils/auth";
+import { useTheme } from "../context/ThemeContext";
+import { FaSun, FaMoon } from "react-icons/fa";
 
 export default function MenuAppBar() {
-  const [anchorElManagement, setAnchorElManagement] =
-    React.useState<null | HTMLElement>(null);
   const [anchorElProfile, setAnchorElProfile] =
     React.useState<null | HTMLElement>(null);
+  const [anchorElManagement, setAnchorElManagement] =
+    React.useState<null | HTMLElement>(null);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
   const user = getUserFromToken();
+  const { theme, toggleTheme } = useTheme();
 
   const handleProfileMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElProfile(event.currentTarget);
   };
+
   const handleManagementMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElManagement(event.currentTarget);
   };
@@ -29,6 +40,7 @@ export default function MenuAppBar() {
   const handleProfileClose = () => {
     setAnchorElProfile(null);
   };
+
   const handleManagementClose = () => {
     setAnchorElManagement(null);
   };
@@ -38,19 +50,26 @@ export default function MenuAppBar() {
     navigate("/");
   };
 
-  const getUserProfile = async () => {
-    navigate("/profile");
-  };
-  const getUsers = async () => {
-    navigate("/admin");
+  const getUserProfile = () => navigate("/profile");
+  const getUsers = () => navigate("/admin");
+
+  // Toggle Mobile Drawer
+  const toggleDrawer = (open: boolean) => () => {
+    setMobileOpen(open);
   };
 
+  // Navigation links
+  const navLinks = [
+    { label: "Dashboard", path: "/dashboard" },
+    { label: "Cart", path: "/cart" },
+    ...(user?.isAdmin ? [{ label: "Add Product", path: "/add-product" }] : []),
+  ];
+
   return (
-    <Box sx={{ flexGrow: 1, backgroundColor: "cyan" }}>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="fixed"
-        className="bg-pink-500"
-        style={{
+        sx={{
           backgroundColor: "#443212",
           color: "white",
           top: 0,
@@ -58,38 +77,43 @@ export default function MenuAppBar() {
         }}
       >
         <Toolbar>
+          {/* Mobile Menu Button */}
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ display: { xs: "flex", md: "none" }, mr: 2 }}
+            onClick={toggleDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-          ></Typography>
-          <div className="flex gap-5 justify-center items-center">
-            <Typography>
-              <Link to="/dashboard">Dashboard</Link>{" "}
-            </Typography>
-            {user?.isAdmin && (
-              <Typography>
-                <Link to={"/add-product"}>Add-Product</Link>
+
+          {/* Logo or Title */}
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            My Shop
+          </Typography>
+
+          {/* Desktop Navigation Links */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex", alignItems: "center" },
+              gap: 3,
+            }}
+          >
+            {navLinks.map((link) => (
+              <Typography key={link.path}>
+                <Link to={link.path}>{link.label}</Link>
               </Typography>
-            )}
-            <Typography>
-              <Link to="/cart">Cart</Link>{" "}
-            </Typography>
+            ))}
+
+            {/* Management Dropdown for Admins */}
             {user?.isAdmin && (
               <div>
                 <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
+                  // size="large"
+                  aria-label="management"
+                  aria-controls="management-menu"
                   aria-haspopup="true"
                   onClick={handleManagementMenu}
                   color="inherit"
@@ -97,18 +121,8 @@ export default function MenuAppBar() {
                   <Typography>Management</Typography>
                 </IconButton>
                 <Menu
-                  className="mt-10"
-                  id="menu-appbar"
+                  id="management-menu"
                   anchorEl={anchorElManagement}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
                   open={Boolean(anchorElManagement)}
                   onClose={handleManagementClose}
                 >
@@ -123,54 +137,80 @@ export default function MenuAppBar() {
                 </Menu>
               </div>
             )}
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleProfileMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                className="mt-10"
-                id="menu-appbar"
-                anchorEl={anchorElProfile}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElProfile)}
-                onClose={handleProfileClose}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleProfileClose();
-                    getUserProfile();
-                  }}
-                >
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleProfileClose();
-                    handleLogout();
-                  }}
-                >
-                  Log out
-                </MenuItem>
-              </Menu>
-            </div>
-          </div>
+          </Box>
+
+          {/* Theme Toggle */}
+          <IconButton onClick={toggleTheme} color="inherit">
+            {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
+          </IconButton>
+
+          {/* Profile Menu */}
+          <IconButton size="large" onClick={handleProfileMenu} color="inherit">
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            anchorEl={anchorElProfile}
+            open={Boolean(anchorElProfile)}
+            onClose={handleProfileClose}
+          >
+            <MenuItem
+              onClick={() => {
+                handleProfileClose();
+                getUserProfile();
+              }}
+            >
+              Profile
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleProfileClose();
+                handleLogout();
+              }}
+            >
+              Log out
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="left" open={mobileOpen} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+        >
+          <List>
+            {navLinks.map((link) => (
+              <ListItem
+                sx={{ cursor: "pointer" }}
+                key={link.path}
+                component={Link}
+                to={link.path}
+              >
+                <ListItemText primary={link.label} />
+              </ListItem>
+            ))}
+
+            {/* Management Section in Mobile Drawer */}
+            {user?.isAdmin && (
+              <>
+                <Typography
+                  sx={{ ml: 2, mt: 2, fontWeight: "norma", cursor: "pointer" }}
+                >
+                  Management
+                </Typography>
+                <ListItem
+                  sx={{ cursor: "pointer", marginLeft: 2 }}
+                  onClick={getUsers}
+                >
+                  <ListItemText primary="Users" />
+                </ListItem>
+              </>
+            )}
+          </List>
+        </Box>
+      </Drawer>
     </Box>
   );
 }

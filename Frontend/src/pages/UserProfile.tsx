@@ -34,9 +34,12 @@ const UserProfile = () => {
             backgroundColor: "peru",
             fontSize: "24px",
           }}
-          alt="Gray Bakari"
+          alt=""
         >
-          {"GM"}
+          {user?.username
+            .split(" ")
+            .map((name) => name[0])
+            .join("")}
         </Avatar>
         <div className="flex flex-col gap-5 text-lg">
           <h1 className="flex gap-10">

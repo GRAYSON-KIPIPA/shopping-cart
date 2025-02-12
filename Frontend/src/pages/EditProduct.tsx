@@ -30,18 +30,12 @@ const EditProduct = () => {
 
   useEffect(() => {
     getProduct();
-  }, []);
+  }, [id]);
 
   const handleSubmit = async () => {
     try {
-      const response = await api.put(`/products/${id}`, form);
+      await api.put(`/products/${id}`, form);
       setIsSuccessful(true);
-      setForm({
-        name: response?.data?.name,
-        price: response?.data?.price,
-        description: response?.data?.description,
-        imageUrl: "",
-      });
 
       setTimeout(() => {
         setIsSuccessful(false);
@@ -100,12 +94,12 @@ const EditProduct = () => {
             size="medium"
             style={{ color: "red" }}
           >
-            Add Product
+            Update Product
           </Button>
         </div>
         {isSuccessful && (
           <span className="text-lime-500 text-center">
-            Product added successfully
+            Product updated successfully
           </span>
         )}
         {isError && (

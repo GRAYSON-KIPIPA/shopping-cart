@@ -72,6 +72,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
           borderRadius: "20px",
         }}
       >
+        <h1 className="text-center bg-red-900 text-gray-300 p-2 font-bold">
+          PRODUCT TABLE
+        </h1>
         <Table
           sx={{
             width: 850,
@@ -102,7 +105,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
                   {page * rowsPerPage + index + 1}
                 </TableCell>
                 <TableCell align="center">{row.name}</TableCell>
-                <TableCell align="center">{row.description}</TableCell>
+                <TableCell align="left">{row.description}</TableCell>
                 <TableCell align="center">{row.price}</TableCell>
                 <TableCell align="center">
                   <button

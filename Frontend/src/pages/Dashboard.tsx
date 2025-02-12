@@ -7,7 +7,7 @@ import useAxiosWithAuth from "../api";
 
 const Dashboard = () => {
   const [products, setProducts] = useState<ResponseProduct[]>([]);
-  const { addToCart, cart } = useCart();
+  const { addToCart, cart, fetchCart } = useCart();
   const api = useAxiosWithAuth();
   const getProducts = async () => {
     try {
@@ -20,6 +20,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getProducts();
+    fetchCart();
   }, []);
 
   const handleDeleteProduct = (id: string) => {
@@ -53,7 +54,7 @@ const Dashboard = () => {
             </h1>
             <h1 className="flex justify-between mr-10 ml-10">
               <span>Total Price: </span>
-              <span>${totalPrice}</span>
+              <span>${totalPrice.toLocaleString()}</span>
             </h1>
             <button className="bg-[#443212] rounded-lg cursor-pointer w-full mt-20 p-2 text-teal-500">
               Purchace Now
