@@ -10,14 +10,21 @@ const UserInfo = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const api = AxiosWithAuth();
+  const [imageUrl, setImageUrl] = useState("");
 
   const getUserInfo = async () => {
     const response = await api.get(`/auth/user/${id}`);
     setUser(response.data);
   };
 
+  const getUserProfileImage = async () => {
+    const response = await api.get(`/auth/profile-image/${id}`);
+    setImageUrl(response.data.imageUrl);
+  };
+
   useEffect(() => {
     getUserInfo();
+    getUserProfileImage();
   }, []);
   return (
     <div className="flex justify-center ">
@@ -36,7 +43,8 @@ const UserInfo = () => {
             backgroundColor: "peru",
             fontSize: "24px",
           }}
-          alt="Gray Bakari"
+          alt=""
+          src={imageUrl}
         >
           {user?.username
             .split(" ")

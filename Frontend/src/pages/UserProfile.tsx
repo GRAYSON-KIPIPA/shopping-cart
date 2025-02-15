@@ -72,15 +72,6 @@ const UserProfile = () => {
             Edit Profile
           </Button>
         </div>
-        <div className="mt-12">
-          <Button
-            variant="outlined"
-            style={{ color: "white", backgroundColor: "peru" }}
-            onClick={fetchUserProfileImage}
-          >
-            Fetch Profile Image
-          </Button>
-        </div>
       </div>
       <div></div>
     </div>
