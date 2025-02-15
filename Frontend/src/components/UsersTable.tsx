@@ -8,10 +8,10 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import { ResponseUser } from "../modals/Modals";
 import { useNavigate } from "react-router-dom";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 
 const UsersTable = () => {
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();

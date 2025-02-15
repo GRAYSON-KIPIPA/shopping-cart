@@ -1,8 +1,8 @@
-import { useCart } from "../context/CartContext";
 import { CartItem } from "../modals/Modals";
+import useCartStore from "../store/cartStore";
 
 const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity } = useCart();
+  const { cart, removeFromCart, updateQuantity } = useCartStore();
   return (
     <div className="p-4 flex justify-center flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>

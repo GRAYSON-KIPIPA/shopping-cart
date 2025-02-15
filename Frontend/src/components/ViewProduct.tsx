@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ResponseProduct } from "../modals/Modals";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 import ReviewList from "./ReviewList";
 import AddReview from "../pages/AddReview";
 
 const ViewProduct = () => {
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const [product, setProduct] = useState<ResponseProduct>();
   const { id } = useParams();
   const token = localStorage.getItem("authToken");
   const [refreshReviews, setRefreshReviews] = useState(false);
 
-  console.log("IDD: ", id);
   const getProduct = async () => {
     const response = await api.get(`/products/${id}`);
-    console.log("PRODUCTS", response.data);
     setProduct(response.data);
   };
   useEffect(() => {

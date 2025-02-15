@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { User } from "../modals/Modals";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 
 const UserInfo = () => {
   const [user, setUser] = useState<User>();
   const navigate = useNavigate();
   const { id } = useParams();
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
 
   const getUserInfo = async () => {
     const response = await api.get(`/auth/user/${id}`);

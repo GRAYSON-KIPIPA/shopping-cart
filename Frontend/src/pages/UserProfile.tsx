@@ -2,21 +2,32 @@ import { Avatar, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { User } from "../modals/Modals";
 import { useNavigate } from "react-router-dom";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
+import { getUserFromToken } from "../utils/auth";
 
 const UserProfile = () => {
   const [user, setUser] = useState<User>();
   const navigate = useNavigate();
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
+  const [imageUrl, setImageUrl] = useState("");
 
   const getUserProfile = async () => {
     const response = await api.get("/auth/profile");
     setUser(response.data);
   };
 
+  const userId = getUserFromToken();
+
+  const fetchUserProfileImage = async () => {
+    const response = await api.get(`/auth/profile-image/${userId?.userId}`);
+    setImageUrl(response.data.imageUrl);
+  };
+
   useEffect(() => {
     getUserProfile();
+    fetchUserProfileImage();
   }, []);
+
   return (
     <div className="flex justify-center ">
       <div
@@ -35,6 +46,7 @@ const UserProfile = () => {
             fontSize: "24px",
           }}
           alt=""
+          src={imageUrl}
         >
           {user?.username
             .split(" ")
@@ -58,6 +70,15 @@ const UserProfile = () => {
             onClick={() => navigate("/edit-profile")}
           >
             Edit Profile
+          </Button>
+        </div>
+        <div className="mt-12">
+          <Button
+            variant="outlined"
+            style={{ color: "white", backgroundColor: "peru" }}
+            onClick={fetchUserProfileImage}
+          >
+            Fetch Profile Image
           </Button>
         </div>
       </div>

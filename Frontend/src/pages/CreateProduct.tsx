@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, FormLabel, TextareaAutosize } from "@mui/material";
 import { Product } from "../modals/Modals";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 
 const CreateProduct = () => {
   const [form, setForm] = useState<Product>({
@@ -11,7 +11,7 @@ const CreateProduct = () => {
   });
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isError, setIsError] = useState(false);
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const handleSubmit = async () => {
     try {
       await api.post("/products", form);

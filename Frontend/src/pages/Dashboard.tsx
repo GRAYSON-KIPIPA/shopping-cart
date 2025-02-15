@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { ResponseProduct } from "../modals/Modals";
 import ProductsTable from "../components/ProductsTable";
 import { Paper } from "@mui/material";
-import { useCart } from "../context/CartContext";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
+import useCartStore from "../store/cartStore";
 
 const Dashboard = () => {
   const [products, setProducts] = useState<ResponseProduct[]>([]);
-  const { addToCart, cart, fetchCart } = useCart();
-  const api = useAxiosWithAuth();
+  const { addToCart, cart, fetchCart } = useCartStore();
+
+  const api = AxiosWithAuth();
   const getProducts = async () => {
     try {
       const response = await api.get("/products");
@@ -33,15 +34,16 @@ const Dashboard = () => {
   const prices = cart.map((product) => product.price * product.quantity);
   const itemQuantities = cart.map((item) => item.quantity);
 
-  const totalItems = itemQuantities.reduce((acc, value) => acc + value, 0);
+  const totalQuantities = itemQuantities.reduce((acc, value) => acc + value, 0);
 
   const totalPrice = prices.reduce((acc, value) => acc + value, 0);
 
   return (
-    <div className="flex justify-evenly md:flex-cols bg-[url('/assets/bg.jpg')] bg-cover bg-center min-h-screen filter bg-opacity-20 ">
+    <div className="flex justify-evenly md:flex-cols bg-[url('/assets/bg.jpg')] bg-cover bg-center min-h-screen filter bg-opacity-20 bg-white dark:bg-gray-900">
       <div className="">
         <Paper
           sx={{ width: 400, height: 400, bgcolor: "lightgrey", marginTop: 2 }}
+          className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
         >
           <h1 className="text-center font-bold text-2xl bg-red-800 text-white rounded-md p-4">
             Cart
@@ -50,7 +52,11 @@ const Dashboard = () => {
           <div className="flex flex-col gap-10 m-4 text-3xl mt-12">
             <h1 className="flex justify-between mr-10 ml-10">
               <span>Total Items:</span>
-              <span>{totalItems}</span>
+              <span>{cart.length}</span>
+            </h1>
+            <h1 className="flex justify-between mr-10 ml-10">
+              <span>Total Quantities:</span>
+              <span>{totalQuantities}</span>
             </h1>
             <h1 className="flex justify-between mr-10 ml-10">
               <span>Total Price: </span>

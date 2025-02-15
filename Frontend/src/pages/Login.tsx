@@ -2,11 +2,11 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const navigate = useNavigate();
   const handleLogin = async () => {
     const response = await api.post("/auth/login", form);

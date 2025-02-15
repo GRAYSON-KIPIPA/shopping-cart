@@ -1,7 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { User } from "../modals/Modals";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 
 const EditProfile = () => {
   const [user, setUser] = useState<User>({
@@ -11,7 +11,7 @@ const EditProfile = () => {
   });
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value });

@@ -16,6 +16,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 const productRoutes = require("./routes/productRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5001; // Use environment variable or 5000
@@ -41,6 +42,7 @@ app.use("/cart", cartRoutes);
 app.use("/products", productRoutes);
 app.use("/admin", adminRoutes);
 app.use("/reviews", reviewRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

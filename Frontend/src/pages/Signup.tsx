@@ -6,7 +6,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 
 const Signup = () => {
   const [form, setForm] = useState<User>({
@@ -14,17 +14,38 @@ const Signup = () => {
     email: "",
     password: "",
     isAdmin: false,
+    profileImage: null as File | null,
   });
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const navigate = useNavigate();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setForm({ ...form, profileImage: e.target.files[0] });
+    }
+  };
+
   const handleRegisterUser = async () => {
     try {
-      await api.post("/auth/register", form);
+      const formData = new FormData();
+      formData.append("username", form.username);
+      formData.append("email", form.email);
+      formData.append("password", form.password);
+      formData.append("isAdmin", form.isAdmin ? form.isAdmin.toString() : "");
+      if (form.profileImage) {
+        formData.append("profileImage", form.profileImage);
+      }
+
+      await api.post("/auth/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       navigate("/");
     } catch (error) {
       console.error(error);
     }
   };
+
   return (
     <div className="flex justify-center  ">
       <div className="flex py-10 flex-col w-96 border p-10 gap-4 mt-20">
@@ -62,6 +83,14 @@ const Signup = () => {
             <MenuItem value={"false"}>User</MenuItem>
           </Select>
         </FormControl>
+        <TextField
+          type="file"
+          onChange={(e) =>
+            setForm({ ...form, profileImage: e.target.files?.[0] || null })
+          }
+          placeholder="Upload Image"
+          size="small"
+        />
         <div className="flex justify-center">
           <Button
             onClick={handleRegisterUser}

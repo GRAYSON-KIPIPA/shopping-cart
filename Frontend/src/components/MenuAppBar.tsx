@@ -140,9 +140,12 @@ export default function MenuAppBar() {
           </Box>
 
           {/* Theme Toggle */}
-          <IconButton onClick={toggleTheme} color="inherit">
-            {theme === "light" ? <FaMoon size={18} /> : <FaSun size={18} />}
-          </IconButton>
+          <button
+            onClick={toggleTheme}
+            className="p-2 m-3 rounded-full bg-gray-500 dark:bg-gray-700 transition"
+          >
+            {theme === "light" ? <FaMoon size={15} /> : <FaSun size={15} />}
+          </button>
 
           {/* Profile Menu */}
           <IconButton size="large" onClick={handleProfileMenu} color="inherit">

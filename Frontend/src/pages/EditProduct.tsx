@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button, FormLabel, TextareaAutosize } from "@mui/material";
 import { Product } from "../modals/Modals";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 import { useParams } from "react-router-dom";
 
 const EditProduct = () => {
@@ -12,7 +12,7 @@ const EditProduct = () => {
   });
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isError, setIsError] = useState(false);
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const { id } = useParams();
 
   const getProduct = async () => {

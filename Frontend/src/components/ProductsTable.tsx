@@ -9,7 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { CartItem, ResponseProduct } from "../modals/Modals";
 
 import { useNavigate } from "react-router-dom";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 import { getUserFromToken } from "../utils/auth";
 
 interface ProductsTableProps {
@@ -26,7 +26,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
   const user = getUserFromToken();
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -115,14 +115,16 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
                     View
                   </button>
                 </TableCell>
-                <TableCell align="center">
-                  <button
-                    onClick={() => handleEditProduct(row._id)}
-                    className="bg-blue-500 p-1 rounded-sm"
-                  >
-                    Edit
-                  </button>
-                </TableCell>
+                {user?.isAdmin && (
+                  <TableCell align="center">
+                    <button
+                      onClick={() => handleEditProduct(row._id)}
+                      className="bg-blue-500 p-1 rounded-sm"
+                    >
+                      Edit
+                    </button>
+                  </TableCell>
+                )}
 
                 {user?.isAdmin && (
                   <TableCell align="center">

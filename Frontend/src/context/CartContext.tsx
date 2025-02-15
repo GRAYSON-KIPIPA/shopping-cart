@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import useAxiosWithAuth from "../api";
+import AxiosWithAuth from "../api";
 import { CartItem } from "../modals/Modals";
 
 interface CartContextType {
@@ -15,7 +15,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const token = localStorage.getItem("authToken");
-  const api = useAxiosWithAuth();
+  const api = AxiosWithAuth();
 
   //Fnction to fetch Cart
   const fetchCart = async () => {

@@ -1,26 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 
 const BASE_URL = "http://localhost:5000";
 
-// Create an Axios instance
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
+const AxiosWithAuth = () => {
+  // const token = localStorage.getItem("authToken");
 
-const useAxiosWithAuth = () => {
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    setToken(localStorage.getItem("authToken")); // Fetch token after mount
-  }, []);
+  const api = axios.create({
+    baseURL: BASE_URL,
+    headers: { "Content-Type": "application/json" },
+  });
 
   api.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const authToken = localStorage.getItem("authToken"); // Ensure fresh token
+      if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
       }
       return config;
     },
@@ -30,4 +24,4 @@ const useAxiosWithAuth = () => {
   return api;
 };
 
-export default useAxiosWithAuth;
+export default AxiosWithAuth;

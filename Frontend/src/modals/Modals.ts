@@ -15,6 +15,7 @@ export interface User {
   email: string;
   password: string;
   isAdmin?: boolean;
+  profileImage?: File | null;
 }
 
 export interface ResponseUser extends User {
